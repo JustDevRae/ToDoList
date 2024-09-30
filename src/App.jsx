@@ -1,34 +1,43 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import "./App.css"
+import { useState, useRef } from "react"
+import Editor from "./components/Editor"
+import Header from "./components/Header"
+import List from "./components/List"
+
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [todos, setTodos] = useState([]);
+  const idRef = useRef(0);
+
+  const onCreate = (content) => {
+    const newTodo = {
+      id: idRef.current++,
+      isDone: false,
+      content: content,
+      date: new Date().getTime()
+    };
+    setTodos([newTodo, ...todos]);
+  }
+
+  const onUpdate = (targetId) => {
+    setTodos(
+      todos.map((todo) => todo.id === targetId ?
+        { ...todo, isDone: !todo.isDone }
+        : todo
+      )
+    )
+  }
+
+  const onDelete = (targetId) => {
+    setTodos(todos.filter((todo) => todo.id !== targetId))
+  }
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <div className="App">
+      <Header />
+      <Editor onCreate={onCreate} />
+      <List todos={todos} onUpdate={onUpdate} onDelete={onDelete} />
+    </div>
   )
 }
 
