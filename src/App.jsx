@@ -40,7 +40,7 @@ function reducer(state, action) {
 
 function App() {
   const [todos, dispatch] = useReducer(reducer, mockData);
-  const idRef = useRef(0);
+  const idRef = useRef(3);
 
   const onCreate = (content) => {
     dispatch({
